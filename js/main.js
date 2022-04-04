@@ -16,7 +16,7 @@ const labelMesageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 
 
-//Objetos con cada gatito
+/*//Objetos con cada gatito
 const kittenData_1 = {
     image: "https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg",
     name: "Anastacio",
@@ -34,13 +34,13 @@ const kittenData_3 = {
     name: "Cielo",
     desc: "Ruiseño, juguetón, le guta estar tranquilo y que nadie le moleste. Es una maravilla acariciarle!",
     race: "British Shorthair",
-};
+};*/
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+//const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
 
-
+let kittenDataList = [];
 //Funciones
-function renderKitten(kittenData) {
+/*function renderKitten(kittenData) {
     const kitten = `<li class="card">
     <article>
       <img
@@ -56,7 +56,7 @@ function renderKitten(kittenData) {
     </article>
     </li>`;
     return kitten;
-}
+}*/
 
 function renderKittenList(kittenDataList) {
     listElement.innerHTML = "";
@@ -140,3 +140,43 @@ searchButton.addEventListener("click", filterKitten);
 buttonAdd.addEventListener("click", addNewKitten);
 buttonCancelForm.addEventListener("click", cancelNewKitten);
 
+//Peticiones al servidor
+
+const GITHUB_USER = 'aimarest';
+const SERVER_URL = `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`;
+
+fetch(SERVER_URL, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  }).then((response)=> response.json())
+  .then((data)=> {
+kittenDataList = data;
+console.log(kittenDataList);
+ renderKittenList();
+ renderKitten();
+  });
+
+/*function renderKittenList(kittenDataList) {
+    listElement.innerHTML = "";
+    for (i=0; i<kittenDataList.length; i++) {
+        listElement.innerHTML += renderKitten(i);
+    }
+}*/
+
+  function renderKitten(data) {
+    const kitten = `<li class="card">
+    <article>
+      <img
+        class="card_img"
+        src=${data.url}
+        alt="gatito"
+      />
+      <h3 class="card_title">${data.name}</h3>
+      <h3 class="card_race">${data.race}</h3>
+      <p class="card_description">
+      ${data.desc}
+      </p>
+    </article>
+    </li>`;
+    return kitten;
+}

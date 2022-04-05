@@ -145,23 +145,16 @@ buttonCancelForm.addEventListener("click", cancelNewKitten);
 const GITHUB_USER = 'aimarest';
 const SERVER_URL = `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`;
 
-fetch(SERVER_URL, {
+/*fetch(SERVER_URL, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   }).then((response)=> response.json())
   .then((data)=> {
-kittenDataList = data;
+kittenDataList = data.results;
 console.log(kittenDataList);
- renderKittenList();
- renderKitten();
-  });
-
-/*function renderKittenList(kittenDataList) {
-    listElement.innerHTML = "";
-    for (i=0; i<kittenDataList.length; i++) {
-        listElement.innerHTML += renderKitten(i);
-    }
-}*/
+ renderKittenList(kittenDataList);
+ 
+  });*/
 
   function renderKitten(data) {
     const kitten = `<li class="card">
@@ -180,3 +173,28 @@ console.log(kittenDataList);
     </li>`;
     return kitten;
 }
+
+//Almacenar en localstorage
+
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
+if (kittenListStored !== null) {
+    //si existe el listado de gatitos en el local storage
+    // vuelve a pintar el listado de gatitos
+    renderKittenList(kittenDataList);
+  } else {
+    //sino existe el listado de gatitos en el local storage
+    //haz la petición al servidor
+    fetch(SERVER_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        kittenDataList = data.results;
+        //guarda el listado obtenido en el local storage.
+       localStorage.setItem("kittenListStored",JSON.stringify(data.results) )
+        //vuelve a pintar el listado de gatitos
+        renderKittenList(kittenDataList);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+

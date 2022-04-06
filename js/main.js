@@ -82,6 +82,8 @@ function handleClickNewCatForm(event) {
     }
 }
 //Adicionar nuevo gatito
+let newKittenDataObject = {};
+//obtener la información de los gatitos del formulario
 
 function addNewKitten(event) {
     event.preventDefault();
@@ -97,17 +99,19 @@ function addNewKitten(event) {
         }
     
     }
-    const newKittenDataObject = {
+    let newKittenDataObject = {
         name:valueName,
-        photo:valuePhoto,
+        url:valuePhoto,
         desc:valueDesc,
         race:valueRace,
       };
       kittenDataList.push(newKittenDataObject);
-console.log(newKittenDataObject);
+      renderKittenList(kittenDataList);
+      localStorage.setItem("kittenListStored",JSON.stringify(kittenDataList) );
+/*console.log(newKittenDataObject);
 for(const  newKittenDataObject of kittenDataList){
     listElement.innerHTML += `<li>${newKittenDataObject}</li>`
-}
+}*/
 }
 
 //Cancelar la búsqueda de un gatito
@@ -142,7 +146,7 @@ buttonCancelForm.addEventListener("click", cancelNewKitten);
 
 //Peticiones al servidor
 
-const GITHUB_USER = 'aimarest';
+const GITHUB_USER = 'celiarodriguezmo';
 const SERVER_URL = `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`;
 
 /*fetch(SERVER_URL, {
@@ -176,9 +180,10 @@ console.log(kittenDataList);
 
 //Almacenar en localstorage
 
-const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
+const kittenListStored = JSON.parse(localStorage.getItem('kittenListStored'));
 if (kittenListStored !== null) {
     //si existe el listado de gatitos en el local storage
+    kittenDataList=kittenListStored;
     // vuelve a pintar el listado de gatitos
     renderKittenList(kittenDataList);
   } else {
@@ -197,4 +202,39 @@ if (kittenListStored !== null) {
         console.error(error);
       });
   }
+//Peticiones servidor  II// guardar en local storage//
+/*fetch(
+    `https://adalab-api.herokuapp.com/api/kittens/${GITHUB_USER}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newKittenDataObject),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success !== "") {
+        //Completa y/o modifica el código:
+     
+        //Agrega el nuevo gatito al listado
 
+        addNewKitten(newKittenDataObject);
+        //Guarda el listado actualizado en el local stoarge
+        localStorage.setItem("kittenListStored",JSON.stringify(data.results) )
+        //Visualiza nuevamente el listado de gatitos
+        renderKittenList(kittenDataList);
+        //Limpia los valores de cada input
+        resetList();
+
+      } else {
+        console.error("No tienes guardado ningún gatito");
+      }
+    });*/
+
+    function resetList() {
+        inputDesc.value = "";
+        inputPhoto.value = "";
+        inputName.value = "";
+        inputRace.value= "";
+    }
+    
